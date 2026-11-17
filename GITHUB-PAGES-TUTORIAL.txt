@@ -1,0 +1,48 @@
+ABYSS BROWSER — GITHUB REPOSITORY + GITHUB PAGES TUTORIAL
+
+BEFORE YOU START
+- Extract this ZIP so you can see index.html, style.css, script.js, package.json, build.mjs, supabase-schema.sql, and the .github folder.
+- Keep index.html, style.css, and script.js together in the repository root. Do not put them inside another nested Abyss folder.
+- The GitHub Actions workflow in .github/workflows/pages.yml automatically downloads the FFmpeg.wasm packages during the build and copies their browser files into the published site. The converter therefore does not rely on a separate paid API or a third-party runtime CDN for FFmpeg.
+
+PART A — CREATE THE REPOSITORY
+1. Sign in to https://github.com/ .
+2. Tap the + menu near the top-right and choose New repository.
+3. Repository name: abyss-browser (or another name you prefer).
+4. Choose Public if using GitHub Free for Pages. GitHub Pages is available for public repositories on GitHub Free.
+5. You can select Add a README file, then choose Create repository.
+
+PART B — UPLOAD ABYSS FILES
+1. Open the new abyss-browser repository.
+2. Choose Add file > Upload files.
+3. Upload the contents of the extracted ZIP, preserving the .github/workflows/pages.yml folder structure.
+4. Make sure index.html, style.css, and script.js are at the repository's top level (not inside an extra folder).
+5. Scroll down and choose Commit changes.
+
+TIP: Uploading a folder tree is easier on a computer. On a phone, GitHub's mobile upload controls can be awkward for folders beginning with a dot, such as .github. If the .github workflow folder did not upload, use GitHub's Add file > Create new file and create the exact path .github/workflows/pages.yml, then paste the contents from the ZIP. Create parent folders automatically when entering the path.
+
+PART C — TURN ON GITHUB PAGES
+1. In the repository, open Settings.
+2. In the left menu, open Pages.
+3. Under Build and deployment > Source, select GitHub Actions.
+4. The included workflow deploys the site after a push to the main branch. You do not need to choose a branch folder.
+5. Open the Actions tab and wait for “Deploy Abyss Browser to GitHub Pages” to finish with a green check.
+6. Return to Settings > Pages. GitHub will show the published URL, normally https://YOUR-USERNAME.github.io/abyss-browser/ .
+7. The first deployment may take a few minutes. If it fails, open Actions, select the failed workflow run, and read the first red step.
+
+PART D — CONNECT SUPABASE
+1. Copy your final GitHub Pages URL.
+2. In Supabase Dashboard > Authentication > URL Configuration, set Site URL to that exact URL.
+3. Run supabase-schema.sql in Supabase SQL Editor as explained in SETUP-SUPABASE.txt.
+4. Open the published Abyss site and test guest mode, then sign up/sign in and test cloud sync.
+
+UPDATING ABYSS LATER
+1. Open your repository and replace the changed index.html, style.css, or script.js using Add file > Upload files (or edit the file in GitHub).
+2. Commit changes to main.
+3. GitHub Actions automatically rebuilds the site and republishes it, including the FFmpeg.wasm worker and WASM files.
+
+FREE-TIER / PRIVACY NOTES
+- GitHub Pages hosts the static site; it does not perform the video conversion. FFmpeg.wasm runs in the visitor's browser, so conversion speed and file size depend on their device.
+- GitHub Pages sites are public on the internet. Do not upload private data, account exports, API secrets, or service_role keys into the repository.
+- FFmpeg's first load downloads its engine from your own published site (about 30 MB); the browser can cache it afterward. The initial download still requires the site files to be reachable on the network.
+- A school or network administrator may restrict GitHub Pages or GitHub Actions assets. This tutorial does not bypass school network controls.

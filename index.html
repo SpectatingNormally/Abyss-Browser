@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="clean-white" data-accent="blue" data-cursor="default" data-font="sans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abyss Browser</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Ccircle cx='16' cy='16' r='13' stroke='%232563eb' stroke-width='3'/%3E%3Cpath d='M9.5 19.5C12.5 13.5 16.5 22.5 22.5 12.5' stroke='%232563eb' stroke-width='2.6' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%232563eb'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <div id="abyss-app">
+    <!-- Top Internal Tab Strip -->
+    <header class="tab-strip">
+      <div class="tabs-list" id="tabs-list"></div>
+      <button class="new-tab-btn" id="new-tab-btn" title="New Abyss Tab (Ctrl+T / Alt+Shift+T)">
+        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+      <button class="strip-util-btn" id="sleep-all-btn" title="Sleep Background Tabs Now">
+        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Browser Navigation Bar -->
+    <nav class="nav-toolbar">
+      <div class="nav-controls">
+        <button class="nav-btn" id="btn-back" title="Back (Alt+Left)" disabled>
+          <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button class="nav-btn" id="btn-forward" title="Forward (Alt+Right)" disabled>
+          <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <button class="nav-btn" id="btn-reload" title="Reload Tab">
+          <svg id="reload-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </button>
+        <button class="nav-btn" id="btn-home" title="Abyss Home">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Revamped Omnibox with Abyss Badge, Live Mode Indicator, Voice Input & Bookmark Star -->
+      <div class="omnibox-anchor">
+        <form class="omnibox" id="omnibox-form" autocomplete="off">
+          <button type="button" class="omnibox-logo-pill" id="omnibox-site-btn" title="Site Permissions & Voice Status">
+            <svg class="abyss-mark" viewBox="0 0 32 32" width="16" height="16" fill="none">
+              <defs>
+                <linearGradient id="abyssGradNav" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="var(--accent)" />
+                  <stop offset="100%" stop-color="#0ea5e9" />
+                </linearGradient>
+              </defs>
+              <circle cx="16" cy="16" r="13" stroke="url(#abyssGradNav)" stroke-width="3" />
+              <path d="M9.5 19.5C12.5 13.5 16.5 22.5 22.5 12.5" stroke="url(#abyssGradNav)" stroke-width="2.6" stroke-linecap="round" />
+              <circle cx="16" cy="16" r="2.6" fill="var(--accent)" />
+            </svg>
+            <span>Abyss</span>
+          </button>
+          <span class="omnibox-mode-badge" id="omnibox-mode-badge">HOME</span>
+          <input
+            type="text"
+            id="omnibox-input"
+            placeholder="Search Abyss, calculate math, paste a YouTube link for .MP4, or enter URL / abyss://app/..."
+            spellcheck="false"
+          />
+          <button type="button" class="omnibox-icon-btn hidden" id="omnibox-clear-btn" title="Clear Search Bar">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <button type="button" class="omnibox-icon-btn" id="omnibox-voice-btn" title="Speak into Search Bar">
+            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+          <button type="button" class="omnibox-icon-btn" id="omnibox-bookmark-btn" title="Pin Current Site to Home">
+            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Omnibox Live Autocomplete Suggestions -->
+        <div class="omnibox-suggestions hidden" id="omnibox-suggestions"></div>
+
+        <!-- Chrome-Style Direct Site Permission Toast -->
+        <div class="site-permission-toast hidden" id="site-permission-toast" role="alertdialog">
+          <div class="perm-toast-header">
+            <svg class="mini-bot-pulse" viewBox="0 0 32 32" width="18" height="18" fill="none">
+              <rect x="6" y="8" width="20" height="16" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.2" />
+              <circle cx="12.5" cy="16" r="2" fill="var(--accent)" />
+              <circle cx="19.5" cy="16" r="2" fill="var(--accent)" />
+              <line x1="16" y1="3" x2="16" y2="8" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" />
+            </svg>
+            <span id="perm-toast-origin">abyss://local wants to</span>
+            <button type="button" class="perm-toast-x" id="perm-toast-close" title="Dismiss">&times;</button>
+          </div>
+          <div class="perm-toast-body" id="perm-toast-body">
+            Use your speaker &amp; microphone
+          </div>
+          <div class="perm-toast-actions">
+            <button type="button" class="btn btn-sm" id="perm-toast-block">Block</button>
+            <button type="button" class="btn btn-sm btn-primary" id="perm-toast-allow">Allow</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Action Controls: Speaker/Voice + Animated Robot Cog Settings -->
+      <div class="nav-actions">
+        <div class="account-anchor" id="account-anchor">
+          <button class="account-avatar guest-avatar" id="account-avatar-btn" type="button" aria-label="Account menu" aria-expanded="false" title="Guest account">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.4"></circle><path d="M5.2 20c.5-3.5 3.1-5.4 6.8-5.4s6.3 1.9 6.8 5.4"></path></svg>
+          </button>
+          <div class="account-popover hidden" id="account-popover" role="menu"></div>
+        </div>
+        <button class="speaker-btn locked" id="nav-speaker-btn" title="Speaker & Voice Access">
+          <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path class="sound-wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path class="sound-wave" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            <line class="mute-slash" x1="23" y1="3" x2="3" y2="21"></line>
+          </svg>
+          <span class="speaker-status-dot"></span>
+        </button>
+
+        <button class="robot-cog-btn" id="btn-settings" title="Abyss Settings & Abyss.Blocker">
+          <svg class="robot-cog-svg" viewBox="0 0 48 48" width="26" height="26" fill="none">
+            <g class="cog-gear-ring">
+              <circle cx="24" cy="24" r="15" stroke="var(--text-primary)" stroke-width="3.2" fill="var(--bg-main)"/>
+              <rect x="22" y="3" width="4" height="5" rx="1.5" fill="var(--text-primary)"/>
+              <rect x="22" y="40" width="4" height="5" rx="1.5" fill="var(--text-primary)"/>
+              <rect x="3" y="22" width="5" height="4" rx="1.5" fill="var(--text-primary)"/>
+              <rect x="40" y="22" width="5" height="4" rx="1.5" fill="var(--text-primary)"/>
+              <rect x="8.2" y="8.2" width="4.5" height="4.5" rx="1.2" transform="rotate(45 10.4 10.4)" fill="var(--text-primary)"/>
+              <rect x="35.3" y="35.3" width="4.5" height="4.5" rx="1.2" transform="rotate(45 37.5 37.5)" fill="var(--text-primary)"/>
+              <rect x="35.3" y="8.2" width="4.5" height="4.5" rx="1.2" transform="rotate(-45 37.5 10.4)" fill="var(--text-primary)"/>
+              <rect x="8.2" y="35.3" width="4.5" height="4.5" rx="1.2" transform="rotate(-45 10.4 37.5)" fill="var(--text-primary)"/>
+            </g>
+            <rect x="15" y="16" width="18" height="16" rx="5" fill="#0f172a"/>
+            <line x1="24" y1="12" x2="24" y2="16" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+            <circle class="robot-antenna-dot" cx="24" cy="11" r="2" fill="var(--accent)"/>
+            <circle class="robot-eye" cx="20.5" cy="23.5" r="2" fill="#38bdf8"/>
+            <circle class="robot-eye" cx="27.5" cy="23.5" r="2" fill="#38bdf8"/>
+            <path d="M20.5 28 Q24 30 27.5 28" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Animated Loading Progress Bar -->
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <!-- Main Browser Viewport (Holds Persistent Per-Tab Panes) -->
+    <main class="viewport" id="viewport"></main>
+  </div>
+
+  <!-- Voice Listening Modal -->
+  <div class="modal-backdrop hidden" id="voice-modal">
+    <div class="modal-card" id="voice-modal-content"></div>
+  </div>
+
+  <!-- General Action Modal (Add Quick Site / Info) -->
+  <div class="modal-backdrop hidden" id="custom-modal">
+    <div class="modal-card" id="custom-modal-content" style="text-align:left;max-width:440px;"></div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="account-modal">
+    <div class="modal-card account-modal-card" id="account-modal-content" role="dialog" aria-modal="true" aria-labelledby="account-modal-title"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

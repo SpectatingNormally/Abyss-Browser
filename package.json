@@ -1,0 +1,13 @@
+{
+  "name": "abyss-browser",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Abyss Browser static site with locally hosted FFmpeg.wasm assets",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@ffmpeg/core": "0.12.10",
+    "@ffmpeg/ffmpeg": "0.12.10"
+  }
+}

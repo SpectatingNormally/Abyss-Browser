@@ -1,0 +1,23 @@
+ABYSS BROWSER — SUPABASE SETUP
+
+WHAT THIS CONNECTS
+- Optional email/password accounts (guest mode remains available).
+- Cloud snapshot sync in public.abyss_user_data.
+- Uploaded HTML/ZIP app backups in the private abyss-app-bundles bucket.
+- Optional converted MP4 cloud saves in the private abyss-videos bucket.
+
+1) Open your Supabase project dashboard.
+2) Open SQL Editor > New query.
+3) Open supabase-schema.sql from this package, copy the entire file, paste it into SQL Editor, and run it.
+4) In Authentication > URL Configuration, set Site URL to your final GitHub Pages URL, for example https://YOUR-USERNAME.github.io/abyss-browser/ . Add that same URL to Redirect URLs if you later enable OAuth.
+5) In Authentication > Providers > Email, leave Email enabled. Email confirmation can be turned off if you want immediate email/password sign-up; do not share passwords or private keys.
+6) In Abyss, test Guest mode first, then register/sign in and use the account menu's sync option.
+
+IMPORTANT
+- The browser uses only the Supabase project URL and publishable key already present in script.js. A publishable key is intended for frontend use when Row Level Security is correctly enabled.
+- NEVER place a Supabase secret key or service_role key in index.html, style.css, script.js, GitHub, or any public repository.
+- Guest mode and local Save & Backup work without an account. Guest data stays on that device unless the user exports a backup.
+- Signed-in users can sync the app snapshot and uploaded app bundles. Cookies, passwords saved by websites, website sessions, device permissions, and third-party account data are not synced.
+- MP4 conversion itself happens locally in the browser. The optional Save to Supabase button uploads the finished MP4 only when signed in.
+- The current Abyss video upload button is limited to 50 MB. Supabase plan quotas and bandwidth limits still apply; cloud storage is optional. Larger converted files can be downloaded locally instead.
+- SQL setup, authentication, and live cloud syncing must be tested in the actual Supabase project; they are not verified by creating this ZIP.
