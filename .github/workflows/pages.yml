@@ -1,6 +1,9 @@
+ name: Deploy Abyss Browser to GitHub Pages
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -14,10 +17,11 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
@@ -28,10 +32,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install FFmpeg.wasm browser packages
+      - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Build static site
+      - name: Build Abyss Browser
         run: npm run build
 
       - name: Configure GitHub Pages
