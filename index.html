@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f0f0f"><meta name="description" content="Browse videos freely. Sign in only when you want to create or sync an account."><title>Video Hub</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body>
+<div id="toast" role="status" aria-live="polite" class="toast"></div>
+<div id="app-screen">
+ <header class="app-header">
+  <div class="header-left">
+   <button class="icon-btn menu-toggle" id="menu-toggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+   <button class="yt-logo" id="brand-home" aria-label="Go to home"><span class="brand-mark">▶</span><span class="logo-text">Video Hub</span></button>
+  </div>
+  <div class="header-search"><input id="search-input" class="field" placeholder="Search videos" aria-label="Search videos"><button class="search-icon-btn" id="search-btn" aria-label="Search">⌕</button></div>
+  <div class="header-actions"><button class="yt-btn upload-header" id="upload-open"><span>＋</span> Create</button><button class="account-icon-button" id="profile-menu" aria-label="Account" title="Account"><span class="account-silhouette" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5Zm0 2c-4.15 0-7.5 2.1-7.5 4.7V21h15v-2.3c0-2.6-3.35-4.7-7.5-4.7Z"/></svg></span></button></div>
+ </header>
+ <div class="app-shell"><aside class="sidebar" id="sidebar">
+  <nav class="primary-nav" aria-label="Main navigation">
+   <button class="active" data-page="home"><span class="nav-icon">⌂</span><span>Home</span></button>
+   <button data-page="shorts"><span class="nav-icon">▣</span><span>Shorts</span></button>
+   <button data-page="subscriptions"><span class="nav-icon">▤</span><span>Subscriptions</span></button>
+  </nav><div class="sidebar-divider"></div><p class="sidebar-heading">You</p><nav class="secondary-nav" aria-label="Your library">
+   <button data-page="mychannel"><span class="nav-icon">◉</span><span>Your channel</span></button>
+   <button data-page="history"><span class="nav-icon">◷</span><span>History</span></button>
+   <button data-page="playlists"><span class="nav-icon">☷</span><span>Playlists</span></button>
+   <button data-page="watchlater"><span class="nav-icon">▢</span><span>Watch later</span></button>
+   <button data-page="studio"><span class="nav-icon">▥</span><span>Creator Studio</span></button>
+   <button data-page="notifications"><span class="nav-icon">♧</span><span>Notifications</span></button>
+  </nav><div class="sidebar-note">Browse freely. Sign in only when you want to create or sync an account.</div>
+ </aside>
+ <main class="content-area" id="content-area">
+  <section id="feed-page"><h1 class="section-title" id="page-title">Home</h1><div class="toolbar"><button class="chip" data-filter="all">All</button><button class="chip" data-filter="video">Videos</button><button class="chip" data-filter="short">Shorts</button><span class="muted" id="feed-status"></span></div><div id="video-grid" class="video-grid"></div><div id="feed-sentinel" class="feed-sentinel"></div><div id="feed-loading" class="muted" style="text-align:center;padding:16px"></div></section>
+  <section id="watch-page" style="display:none"><div class="player-frame" id="player-frame"></div><h2 id="watch-title" class="section-title"></h2><div class="profile-row" style="margin:12px 0"><img id="watch-avatar" src="" alt=""><div style="flex:1;min-width:0"><strong id="watch-author"></strong><p class="muted" id="watch-stats"></p></div><button id="watch-subscribe" class="yt-btn sub-btn">Subscribe</button></div><div class="watch-actions"><button id="like-btn">👍 <span id="like-count">0</span></button><button id="dislike-btn">👎 <span id="dislike-count">0</span></button><button id="watchlater-btn">＋ Watch Later</button><button id="playlist-add-btn">Add to playlist</button><button id="share-btn">Share</button><button id="report-video-btn">Report</button><button id="edit-video-btn" class="hidden">Edit video</button><button id="delete-video-btn" class="hidden">Delete video</button></div><p id="watch-description" class="notice"></p><div class="comments-container"><h3 class="comments-header">Comments</h3><div class="add-comment-box"><textarea id="comment-input" class="field" placeholder="Add a comment..."></textarea><div class="comment-btn-actions"><button id="comment-submit" class="yt-btn primary">Comment</button></div></div><div id="comments-list"></div></div></section>
+  <section id="channel-page" style="display:none"><div class="profile-banner" id="channel-banner"></div><div class="profile-row"><img id="channel-avatar" src="" alt=""><div class="channel-header-info"><h1 id="channel-name"></h1><p class="muted" id="channel-stats"></p><p id="channel-bio" style="white-space:pre-wrap;overflow-wrap:anywhere"></p></div><button id="channel-subscribe" class="yt-btn sub-btn hidden">Subscribe</button><button id="channel-edit" class="yt-btn secondary hidden">Edit channel</button><button id="channel-block" class="yt-btn secondary hidden">Block channel</button></div><h2 class="section-title">Videos</h2><div id="channel-grid" class="video-grid"></div><div id="channel-sentinel" class="feed-sentinel"></div><div id="channel-loading" class="muted" style="text-align:center;padding:16px"></div></section>
+  <section id="studio-page" style="display:none"><h1 class="section-title">Creator Studio</h1><div id="studio-summary" class="notice">Your channel analytics will appear here.</div><h2 class="section-title">Your videos</h2><div id="studio-videos"></div></section>
+  <section id="simple-page" style="display:none"><h1 class="section-title" id="simple-title"></h1><div id="simple-content"></div></section>
+ </main></div>
+</div>
+<div class="modal" id="upload-modal"><div class="modal-content"><h2>Upload content</h2><label>Content type<select id="upload-kind" class="field"><option value="video">Regular video</option><option value="short">Short (vertical video)</option></select></label><label>Title<input id="upload-title" maxlength="120" placeholder="Add a title"></label><label>Description<textarea id="upload-description" maxlength="5000" placeholder="Tell viewers about your video"></textarea></label><label>Video file<input id="upload-file" type="file" accept="video/mp4,video/webm,video/quicktime,video/*"></label><label>Or use a direct video URL<input id="upload-url" type="url" placeholder="https://... (direct media file only)"></label><label>Thumbnail (optional)<input id="upload-thumbnail" type="file" accept="image/*"></label><label>Visibility<select id="upload-visibility" class="field"><option value="public">Public</option><option value="unlisted">Unlisted</option><option value="private">Private</option></select></label><p class="muted" id="upload-help">Uploads require a signed-in account. Shorts use a vertical format and are limited to 180 seconds.</p><div class="progress"><span id="upload-progress"></span></div><div class="modal-actions"><button class="yt-btn secondary" data-close="upload-modal">Cancel</button><button class="yt-btn primary" id="upload-submit">Upload</button></div></div></div>
+<div class="modal" id="edit-channel-modal"><div class="modal-content"><h2>Edit channel</h2><label>Display name<input id="edit-display-name" maxlength="40"></label><label>Bio<textarea id="edit-bio" maxlength="1000"></textarea></label><label>Profile picture<input id="edit-avatar" type="file" accept="image/*"></label><label>Banner<input id="edit-banner" type="file" accept="image/*"></label><div class="modal-actions"><button class="yt-btn secondary" data-close="edit-channel-modal">Cancel</button><button class="yt-btn primary" id="save-channel">Save changes</button></div></div></div>
+<div class="modal" id="edit-video-modal"><div class="modal-content"><h2>Edit video</h2><input id="edit-video-title" placeholder="Title"><textarea id="edit-video-description" placeholder="Description"></textarea><select id="edit-video-visibility" class="field"><option value="public">Public</option><option value="unlisted">Unlisted</option><option value="private">Private</option></select><label>Replace thumbnail<input id="edit-video-thumbnail" type="file" accept="image/*"></label><div class="modal-actions"><button class="yt-btn secondary" data-close="edit-video-modal">Cancel</button><button class="yt-btn primary" id="save-video">Save</button></div></div></div>
+<div class="modal" id="playlist-add-modal"><div class="modal-content"><h2>Add to playlist</h2><div id="playlist-choice-list"></div><div class="modal-actions"><button class="yt-btn secondary" data-close="playlist-add-modal">Close</button></div></div></div>
+<div class="modal" id="playlist-modal"><div class="modal-content"><h2>Create playlist</h2><input id="playlist-name" placeholder="Playlist name" maxlength="80"><textarea id="playlist-description" placeholder="Description"></textarea><div class="modal-actions"><button class="yt-btn secondary" data-close="playlist-modal">Cancel</button><button class="yt-btn primary" id="playlist-create">Create</button></div></div></div>
+<div class="modal" id="report-modal"><div class="modal-content"><h2>Report content</h2><select id="report-reason" class="field"><option value="spam">Spam or misleading</option><option value="harassment">Harassment or bullying</option><option value="inappropriate">Inappropriate content</option><option value="copyright">Copyright concern</option><option value="other">Other</option></select><textarea id="report-details" placeholder="Optional details" maxlength="1000"></textarea><div class="modal-actions"><button class="yt-btn secondary" data-close="report-modal">Cancel</button><button class="yt-btn primary" id="report-submit">Submit report</button></div></div></div>
+<div class="modal account-modal" id="account-modal"><div class="modal-content account-panel">
+ <div class="account-panel-top"><span class="account-silhouette large" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5Zm0 2c-4.15 0-7.5 2.1-7.5 4.7V21h15v-2.3c0-2.6-3.35-4.7-7.5-4.7Z"/></svg></span><div><h2>Your account</h2><p id="account-label" class="muted">Browsing as a guest</p></div></div>
+ <button class="yt-btn secondary account-wide" id="account-profile">Open your channel</button>
+ <button class="yt-btn primary account-wide" id="account-auth-open">Sign in or create an account</button>
+ <form id="auth-form" class="account-auth-form hidden"><h3 id="auth-heading">Sign in</h3><input id="auth-email" type="email" placeholder="Email address" autocomplete="email" required><input id="auth-password" type="password" placeholder="Password" minlength="8" autocomplete="current-password" required><input id="auth-username" type="text" placeholder="Channel username" maxlength="24" autocomplete="username" class="hidden"><button class="yt-btn primary account-wide" id="auth-submit" type="submit">Sign in</button><button class="yt-btn text-only" id="auth-toggle" type="button">Create an account</button><p class="muted auth-message" id="auth-message" aria-live="polite"></p></form>
+ <button class="yt-btn text-only account-wide hidden" id="account-signout">Sign out</button>
+ <button class="yt-btn text-only account-wide" data-close="account-modal">Close</button>
+ </div></div>
+<div class="modal" id="video-report-modal"><div class="modal-content"><h2>Report comment</h2><p id="comment-report-label" class="muted"></p><div class="modal-actions"><button class="yt-btn secondary" data-close="video-report-modal">Cancel</button><button class="yt-btn primary" id="comment-report-submit">Report</button></div></div></div>
+</body></html>

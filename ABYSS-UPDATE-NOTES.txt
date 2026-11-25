@@ -1,0 +1,24 @@
+Abyss ChromeOS PWA update
+
+This package is based on the supplied Abyss project and retains the current tab design.
+
+Fix in this update:
+- After account cloud restore/login, Home widget panes are invalidated and refreshed.
+- Sticky Notes and other Home widgets now reflect the restored account snapshot.
+- Only Home panes are rebuilt. If a game or website tab is active, its iframe/page is left mounted.
+- Inactive Home tabs are marked stale and rebuild when revisited.
+- Service worker cache version was incremented so the updated script can replace the prior cached app shell.
+
+Important scope note:
+This is not the complete implementation of every item in the long-term Abyss wishlist. Existing features are preserved; the remaining large features (full Settings Studio redesign, complete Gaming Hub, Privacy Center, full backup/sync UI, workspaces, etc.) still require implementation and testing in subsequent updates. No achievements or milestones are included.
+
+2026-11-24 FEATURE EXPANSION (v0.2.0)
+- Added Appearance Studio controls and theme import/export.
+- Added Gaming Hub controls and Gaming Mode.
+- Added Privacy Center with Abyss history clearing and clear ChromeOS boundary notes.
+- Added Notifications and Quiet Mode controls.
+- Added named workspaces with save/restore/delete and color-coded tab groups / tab rename via right-click.
+- Added full JSON backup export; portable backup code now includes tabs, history, and workspaces.
+- Added independently scrollable/resizable Settings navigation and content areas.
+- Added session-restore preference and PWA cache refresh.
+- All new settings/workspaces use existing JSON cloud state; no new SQL migration required.

@@ -1,0 +1,53 @@
+ABYSS + YOUTUBE SUPABASE DATABASE REPAIR
+
+There are TWO separate Supabase projects. Keep them separate:
+
+1) YOUTUBE PROJECT (priority)
+   - Run YOUTUBE-SETUP-NEW.sql in the YouTube project's SQL Editor.
+   - This script creates/repairs the 14 tables used by the custom YouTube app,
+     rebuilds RLS policies for those app-owned tables, restores the three media
+     buckets, restores the app's Realtime publication entries, and creates the
+     required upsert keys/indexes.
+   - It does not drop legacy_* tables or delete video/account data.
+   - It preserves old storage policies for unrelated buckets. Policies scoped to
+     the YouTube app's videos, video-thumbnails, and profile-media buckets are
+     rebuilt so private video objects are not made public by accident.
+   - If duplicate rows prevent a required unique index, the SQL emits a NOTICE
+     and keeps the rows; the matching upsert feature will need those duplicates
+     resolved before it can work correctly.
+
+2) ABYSS BROWSER PROJECT
+   - Run ABYSS-SETUP-NEW.sql in the Abyss project's SQL Editor.
+   - This script creates/repairs the six Abyss tables, storage buckets, owner
+     permissions, global blocker, maintenance mode, and Realtime publication.
+   - It sets the shared Global Blocker to ON while preserving the existing
+     blocked_sites JSON data.
+
+IMPORTANT SAFETY STEPS
+- Before running either script, use Supabase Dashboard > Database > Backups
+  (or export your data) so you have a recovery point.
+- Run each script ONLY in its matching project. Do not paste both scripts into
+  one project.
+- Do not manually delete current app tables or legacy_* backups as a repair step.
+- Never put a service_role or sb_secret key in browser code. Only publishable
+  keys belong in config.js / script.js.
+- Enable Authentication > Providers > Anonymous Sign-Ins in the YouTube project
+  if you want guest browsing/social actions. The app still requires a normal
+  signed-in account for creator uploads and personal library features.
+- Supabase project-level Storage limits still apply even when a bucket has no
+  bucket-level file-size cap.
+
+VERIFY AFTER RUNNING
+- Run YOUTUBE-TABLE-AUDIT.sql in the YouTube project. It should show all 14
+  expected tables as present, RLS enabled, and no missing columns. The three
+  expected storage buckets should appear below the table report.
+- Run ABYSS-TABLE-AUDIT.sql in the Abyss project. It should show all six
+  expected tables as present, RLS enabled, and no missing columns. The two
+  expected storage buckets should appear below the table report.
+- Realtime publication status should be true for tables listed by each app.
+- If an audit shows missing columns, or SQL Editor shows an ERROR, stop and
+  share the exact error/output before running additional repair SQL.
+
+These scripts are prepared from the app's current source code, but they have
+not been executed against your live Supabase projects. The audit queries are
+provided so the live database can be checked after you run them.

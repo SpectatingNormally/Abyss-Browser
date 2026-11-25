@@ -1,0 +1,25 @@
+ABYSS FEATURE EXPANSION UPDATE
+Version: 0.2.0
+
+Included in this update:
+- Appearance Studio controls: panel radius, density, motion level, custom accent, theme import/export.
+- Gaming Hub settings: Gaming Mode and reduced Abyss UI motion preference.
+- Tabs & Workspaces: save, restore, and delete named tab workspaces; session restore preference.
+- Privacy Center: Abyss history clearing and an explanation of ChromeOS-controlled site data.
+- Notifications: Quiet Mode, desktop notification permission, notification sound preference, and test notification.
+- Backup & Sync: full JSON backup export plus the existing portable save code flow, expanded to include tabs, history, and workspaces.
+- Settings layout: separate independently scrollable/resizable navigation and content areas on desktop-sized screens.
+- Cloud persistence: new preferences and workspaces are stored inside the existing Abyss user-state JSON payload.
+- Cloud-restored Home widgets continue to invalidate/rebuild Home only, leaving unrelated live game and website panes mounted.
+- Service worker cache version bumped so deployed Chromebook PWAs can fetch the updated files.
+
+SQL:
+No new SQL migration is required for these additions. They use the existing abyss_user_data JSON state record and existing save/restore flow. Do not replace or rename the existing SQL setup files; they remain part of the current Supabase setup. Existing YouTube SQL files are also preserved.
+
+Important platform boundaries:
+- This remains a Chromebook-installable PWA, not a new Chromium browser engine.
+- ChromeOS owns cookie/site-permission/device-level browsing-data controls. Abyss cannot clear Chrome's global browser data from a webpage.
+- Desktop notifications require the user's ChromeOS/Chrome permission and may be disabled by school policy.
+- Gaming Mode only reduces Abyss-owned UI effects. It does not change a game's private settings or guarantee uninterrupted runtime.
+- Workspace snapshots preserve Abyss tab metadata and routes. Some third-party sites may require signing in again or may not restore their exact live in-memory state.
+- Do Not Track is stored as a user preference; actual browser request headers remain controlled by Chrome.

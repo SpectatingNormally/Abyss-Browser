@@ -1,0 +1,21 @@
+ABYSS PERMANENT APP INTEGRATION
+
+Built-in routes:
+- abyss://app/youtube       YouTube / Video Hub
+- abyss://blocker           Global Blocker dashboard
+- abyss://owner             Owner Control Center
+
+The YouTube app is embedded as a self-contained HTML document in script.js and runs inside Abyss's existing permanent-app iframe. The editable original sources are in youtube-app-source/.
+
+Supabase projects:
+- Abyss account/cloud sync: keep the existing Abyss project URL and publishable key in script.js.
+- YouTube app data: its own project URL and publishable key are embedded in the YouTube app document. Do not replace either project configuration with the other.
+
+OWNER SETUP:
+Run the updated supabase-schema.sql in the Abyss Supabase project's SQL Editor. It creates a read-only owner identity table and inserts the account UUID the user confirmed. Then sign into Abyss with that account and open abyss://owner.
+
+GLOBAL BLOCKER:
+The existing blocker password gate and rules are preserved and moved out of Settings into abyss://blocker. This is a client-side browser restriction, not device-level security.
+
+MAINTENANCE MODE + REALTIME UPDATE
+Run the updated ABYSS-SETUP-NEW.sql in the Abyss Supabase project. It adds the public-read/owner-write abyss_maintenance table, publishes it and abyss_user_data for Realtime, and resets the global blocker master switch to ON while preserving existing blocked-site rules. Owner Control Center now contains the maintenance duration and start/stop controls.

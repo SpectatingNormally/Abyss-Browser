@@ -1,0 +1,15 @@
+SUPABASE SETUP — ABYSS BROWSER + CUSTOM YOUTUBE
+
+This package uses two different Supabase projects:
+- Abyss Browser: run ABYSS-SETUP-NEW.sql
+- Your custom YouTube app: run YOUTUBE-SETUP-NEW.sql
+
+For the detailed safe repair order, backup guidance, and verification steps,
+read SQL-INSTRUCTIONS.txt.
+
+The YouTube app's editable source and config are in youtube-app-source/.
+The YouTube SQL audit is YOUTUBE-TABLE-AUDIT.sql.
+The Abyss SQL audit is ABYSS-TABLE-AUDIT.sql.
+
+Do not combine the two SQL files into one project. Never put a service_role or
+sb_secret key in browser code.

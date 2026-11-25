@@ -1,0 +1,10 @@
+ABYSS MP4 CONVERTER — FFmpeg.wasm
+
+- The MP4 page now converts user-selected local video files in the browser using FFmpeg.wasm.
+- No Rendi account, paid conversion API, processing fee, or conversion server is used.
+- GitHub Actions installs @ffmpeg/ffmpeg 0.12.10 and @ffmpeg/core 0.12.10, then publishes their browser worker/core files under /vendor/ with Abyss.
+- FFmpeg's single-thread core is used for compatibility; multi-thread mode is not enabled because it requires extra cross-origin isolation headers that basic GitHub Pages deployments do not provide.
+- First load is approximately 30 MB. Device performance, available memory, browser support, and video codecs affect success. The UI currently rejects input files over 500 MB as a safety guard; this is not a promise that every smaller file will convert on every device.
+- YouTube links are only shown through YouTube's official embed. A YouTube watch URL is not a downloadable MP4 source and is not extracted. To convert a video, upload a local file you own or have permission to convert.
+- Direct video links can be previewed when the hosting site allows it. For conversion, download a permitted copy and upload the file.
+- Conversion is local; no source video is uploaded to a conversion server. The optional Save to Supabase button uploads the resulting MP4 to the user's private abyss-videos bucket and requires sign-in plus the supplied SQL schema.

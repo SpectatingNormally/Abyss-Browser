@@ -1,0 +1,28 @@
+ABYSS CHROMEOS APP PACKAGE
+
+This package adds Progressive Web App (PWA) support to Abyss. It is designed for installation from ChromeOS Chrome without Linux or a separate desktop installer.
+
+IMPORTANT
+A ZIP file itself cannot be installed as a Chromebook app. Chrome installs a PWA from a secure HTTPS website. The app must first be deployed to your GitHub Pages site (or another HTTPS host).
+
+DEPLOY
+1. Extract this ZIP.
+2. Upload the contents of the Abyss-Desktop folder to the same GitHub Pages repository/location that currently hosts Abyss, preserving folders such as icons/ and youtube-app-source/.
+3. Commit/push and wait for GitHub Pages to finish deploying.
+4. Open the deployed Abyss HTTPS address in ChromeOS Chrome.
+5. Use the install icon in the address bar, or Chrome menu > Cast, save, and share > Install page as app (wording may vary).
+6. Open Abyss from the Chromebook launcher.
+
+SCHOOL DEVICE NOTE
+A school administrator may disable PWA installation. If installation is blocked, use the same HTTPS Abyss site in a Chrome tab. Do not attempt to bypass school management restrictions.
+
+WHAT THIS PACKAGE DOES
+- Adds a PWA manifest with standalone display mode and Abyss app icons.
+- Adds a service worker that caches the local app shell for faster repeat loading and limited offline shell access.
+- Leaves the existing Abyss app code and current tab design intact.
+
+LIMITATIONS
+- This is still the existing web app running in a ChromeOS app window, not an independent Chromium browser engine.
+- External websites, Supabase, Brave search, and other online services still need internet access.
+- This does not add third-party browser extension support.
+- The full previously discussed wishlist has not yet been implemented by this packaging step.

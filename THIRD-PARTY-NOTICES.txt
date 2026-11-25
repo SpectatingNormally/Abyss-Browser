@@ -1,0 +1,11 @@
+Third-party components used by the build:
+
+- FFmpeg.wasm JavaScript wrapper: @ffmpeg/ffmpeg 0.12.10
+  Project: https://github.com/ffmpegwasm/ffmpeg.wasm
+  The wrapper is distributed under the MIT License. The npm package includes its license file; the GitHub Actions build copies the package's ESM distribution.
+
+- FFmpeg.wasm core: @ffmpeg/core 0.12.10
+  Project: https://github.com/ffmpegwasm/ffmpeg.wasm
+  The core is built from FFmpeg and bundled libraries. FFmpeg and included libraries carry their own applicable LGPL/GPL and other notices. Review the package's included license and FFmpeg licensing information before redistributing modified binaries.
+
+- JSZip and Supabase JS are loaded by the existing application as configured in index.html/script.js.
